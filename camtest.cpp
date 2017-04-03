@@ -88,6 +88,51 @@ int main()
 		return 1;
 	}	
 
+	double dblMinFrameTime = 0.0, dblMaxFrameTime = 0.0, dblFrameTimeInterval = 0.0;
+	double dblframerate = 0.0;
+	ret = is_GetFrameTimeRange(h, &dblMinFrameTime, &dblMaxFrameTime, &dblFrameTimeInterval);
+	if(ret != IS_SUCCESS) {
+		std::cout << "is_GetFrameTimeRange error." << std::endl;
+		return 1;
+	}
+	std::cout << "Frametime range " << dblMinFrameTime << "-" << dblMaxFrameTime << "." << std::endl;
+
+	ret = is_SetFrameRate(h, IS_GET_FRAMERATE, & dblframerate);
+	if(ret != IS_SUCCESS) {
+		std::cout << "is_SetFrameRate error." << std::endl;
+		return 1;
+	}
+	std::cout << "Applied Framerate " << dblframerate << "." << std::endl;
+
+	INT sleeptime = IS_WAIT;
+	ret = is_FreezeVideo(h, sleeptime);
+	if(ret != IS_SUCCESS) {
+		std::cout << "is_FreezeVideo error." << std::endl;
+		return 1;
+	}
+
+	double dblFps = 0.0;
+	ret = is_GetFramesPerSecond(h, &dblFps);
+	if(ret != IS_SUCCESS) {
+		std::cout << "is_GetFramesPerSecond error." << std::endl;
+		return 1;
+	}
+	std::cout << "Fps " << dblFps << "." << std::endl;
+	
+	static char szDefaultFilename[] = "image.bmp";
+	char* filename = szDefaultFilename;
+	ret = is_SaveImage(h, filename);
+	if(ret != IS_SUCCESS) {
+		std::cout << "is_SaveImage error." << std::endl;
+		return 1;
+	}
+	
+	ret = is_FreeImageMem(h, pmem, id);
+	if(ret != IS_SUCCESS) {
+		std::cout << "is_FreeImageMem error." << std::endl;
+		return 1;
+	}
+
 	std::cout << "Exit board." << std::endl;
 	ret = is_ExitBoard(h);
 	if(ret != IS_SUCCESS) {
